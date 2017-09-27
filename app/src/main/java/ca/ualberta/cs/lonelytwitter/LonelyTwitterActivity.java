@@ -26,6 +26,12 @@ import android.widget.ListView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+/**
+ * @author Tyler Heise
+ * @version 1.5
+ * @see Activity
+ * @since 1.0
+ */
 public class LonelyTwitterActivity extends Activity {
 
 	private static final String FILENAME = "file.sav";
@@ -35,21 +41,29 @@ public class LonelyTwitterActivity extends Activity {
 	private ArrayList<Tweet> tweetList;
 	private ArrayAdapter<Tweet> adapter;
 
-	/** Called when the activity is first created. */
+	/** Called when the activity is first created.
+	 * Sets up main activity
+	 * */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 
+		/* sets buttons and edit texts */
 		bodyText = (EditText) findViewById(R.id.body);
 		Button saveButton = (Button) findViewById(R.id.save);
 		Button clearButton = (Button) findViewById(R.id.clear);
 		oldTweetsList = (ListView) findViewById(R.id.oldTweetsList);
 
+		/**
+		 *listen for click on save button
+		 */
 		saveButton.setOnClickListener(new View.OnClickListener() {
 
 			public void onClick(View v) {
 				setResult(RESULT_OK);
+
+				/** if click is found, make a new tweet with that text and add it to the list */
 				String text = bodyText.getText().toString();
 
 				NormalTweet newTweet = new NormalTweet(text);
@@ -59,7 +73,6 @@ public class LonelyTwitterActivity extends Activity {
 				adapter.notifyDataSetChanged();
 
 				saveInFile();
-				//finish();
 
 			}
 		});
@@ -70,17 +83,13 @@ public class LonelyTwitterActivity extends Activity {
 				setResult(RESULT_OK);
 				tweetList.clear();
 
+				/*delete old tweets on file */
 				File file = getFilesDir();
-				//
-
-                // String path = Context.getFilesDir().getAbsolutePath();
 
 				File file_del = new File (file, FILENAME);
                 file_del.delete();
                 adapter.notifyDataSetChanged();
-
-
-
+				
 			}
 		});
 	}
@@ -95,6 +104,10 @@ public class LonelyTwitterActivity extends Activity {
 		oldTweetsList.setAdapter(adapter);
 	}
 
+	/**
+	 * loads tweets from file
+	 * @throws RuntimeException
+	 */
 	private void loadFromFile() {
 		try {
 			FileInputStream fis = openFileInput(FILENAME);
@@ -117,6 +130,10 @@ public class LonelyTwitterActivity extends Activity {
 
 	}
 
+	/**
+	 * saves a tweet into the file
+	 * @throws RuntimeException
+	 */
 	private void saveInFile() {
 		try {
 			FileOutputStream fos = openFileOutput(FILENAME,
